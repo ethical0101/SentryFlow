@@ -1,0 +1,55 @@
+{
+  "name": "sentryflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Permission-aware agent execution platform exposed as an MCP server, with a simulated Alexa+ household client.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "alexa",
+    "ai-agents",
+    "agent-safety",
+    "policy-engine",
+    "human-in-the-loop",
+    "ollama",
+    "authorization",
+    "audit-log"
+  ],
+  "license": "MIT",
+  "author": "ethical0101",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethical0101/SentryFlow.git"
+  },
+  "homepage": "https://github.com/ethical0101/SentryFlow#readme",
+  "bugs": {
+    "url": "https://github.com/ethical0101/SentryFlow/issues"
+  },
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "engines": {
+    "node": ">=20.10"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,web -c yellow,cyan \"npm run dev -w server\" \"npm run dev -w web\"",
+    "build": "npm run build -w web",
+    "start": "npm run build && npm run start -w server",
+    "test": "npm run test -w server && npm run test -w web",
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w web",
+    "lint": "eslint server web scripts/*.mjs eslint.config.mjs",
+    "verify": "npm run typecheck && npm run lint && npm run test",
+    "smoke": "npm run smoke -w server",
+    "report": "node scripts/generate-test-report.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "concurrently": "9.1.2",
+    "eslint": "9.39.1",
+    "eslint-plugin-react-hooks": "5.1.0",
+    "globals": "15.14.0",
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.70.1"
+  }
+}
