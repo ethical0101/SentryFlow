@@ -19,6 +19,7 @@
 </p>
 
 <p align="center">
+  <a href="https://ethical0101.github.io/SentryFlow/"><b>Project page</b></a> ·
   <a href="#demo">Demo</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#how-it-works">How it works</a> ·
@@ -52,7 +53,7 @@ Built for the **Amazon Build, Ship, Shape Developer Hackathon 2026 — Alexa+ tr
 
 A 2:53 narrated walkthrough, recorded from the running app: request → plan → permitted actions → owner approval → denied action → receipt → live MCP traffic.
 
-▶ **[Watch the demo video](https://github.com/ethical0101/SentryFlow/releases/download/v1.0.0/sentryflow-demo.mp4)** (MP4, 1080p, with captions — [subtitles .srt](https://github.com/ethical0101/SentryFlow/releases/download/v1.0.0/sentryflow-demo.srt))
+▶ **[Watch the demo on the project page](https://ethical0101.github.io/SentryFlow/)**: plays in the browser with captions. Also available as a [download from the v1.0.0 release](https://github.com/ethical0101/SentryFlow/releases/tag/v1.0.0) (MP4 + .srt).
 
 | | |
 |---|---|
