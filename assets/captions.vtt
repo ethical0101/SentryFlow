@@ -1,0 +1,153 @@
+WEBVTT
+
+1
+00:00:00.344 --> 00:00:03.174
+This is SentryFlow, for the Alexa+ track:
+
+2
+00:00:03.214 --> 00:00:06.604
+a permission-aware execution layer for AI agents.
+
+3
+00:00:06.924 --> 00:00:09.009
+The model can propose anything.
+
+4
+00:00:09.329 --> 00:00:12.789
+Deterministic code decides what actually runs.
+
+5
+00:00:13.818 --> 00:00:19.003
+A local model turns a request into a plan, and that plan is treated as untrusted.
+
+6
+00:00:19.323 --> 00:00:24.098
+Each action is schema validated, decided by a deterministic policy engine,
+
+7
+00:00:24.138 --> 00:00:29.758
+held for the owner's approval when it's sensitive, and re-checked right before it runs.
+
+8
+00:00:30.078 --> 00:00:35.688
+It's all audited, and served as a real MCP server over streamable HTTP.
+
+9
+00:00:37.126 --> 00:00:40.486
+This is the simulated Alexa+ experience.
+
+10
+00:00:40.806 --> 00:00:43.041
+Every device is simulated.
+
+11
+00:00:43.361 --> 00:00:48.360
+I'll ask it to get the house ready while I leave for college, with my own rule:
+
+12
+00:00:48.400 --> 00:00:53.271
+never unlock a door, disable security, or make purchases without my approval.
+
+13
+00:00:54.056 --> 00:00:58.141
+A local Qwen model, running on this laptop, drafts the plan.
+
+14
+00:01:00.635 --> 00:01:04.920
+Three actions are allowed, one needs my approval, and one is denied.
+
+15
+00:01:05.240 --> 00:01:07.732
+Risk comes from the policy, not the model,
+
+16
+00:01:07.772 --> 00:01:10.626
+the routine waits for the lights and thermostat,
+
+17
+00:01:10.666 --> 00:01:15.450
+and my own rule shows up as a constraint that can only make the policy stricter.
+
+18
+00:01:16.234 --> 00:01:19.999
+I run the permitted actions: lights off, thermostat to eco,
+
+19
+00:01:20.039 --> 00:01:21.869
+and the Leaving Home routine.
+
+20
+00:01:22.189 --> 00:01:27.124
+The air filter order waits for my approval, and turning off the camera is denied.
+
+21
+00:01:27.900 --> 00:01:31.985
+The simulated house really changed, and no order has been placed.
+
+22
+00:01:36.156 --> 00:01:41.491
+The approval queue shows exactly what will run, and a hash of those exact arguments.
+
+23
+00:01:41.811 --> 00:01:47.246
+My approval is bound to that hash, it's single-use, and it expires in five minutes.
+
+24
+00:01:47.566 --> 00:01:52.326
+It travels over a separate owner session, so the agent can never approve itself.
+
+25
+00:01:53.097 --> 00:01:56.857
+The approved order is re-checked, and runs exactly once.
+
+26
+00:01:57.639 --> 00:01:59.949
+The denied action stays blocked.
+
+27
+00:02:00.269 --> 00:02:02.679
+Approval can't override a denial.
+
+28
+00:02:03.461 --> 00:02:08.496
+Every step lands in a hash-chained audit log, and each request gets a receipt:
+
+29
+00:02:08.536 --> 00:02:12.921
+what was asked, what the policy decided, who approved, and what ran.
+
+30
+00:02:13.704 --> 00:02:15.839
+Prompt injection doesn't help.
+
+31
+00:02:16.159 --> 00:02:20.631
+This request claims everything is pre-approved, yet disarming is denied,
+
+32
+00:02:20.671 --> 00:02:25.269
+unlocking still needs approval, and the vacuum is over the spending limit.
+
+33
+00:02:26.045 --> 00:02:31.837
+And it's genuinely MCP. This interface is a client with two sessions,
+
+34
+00:02:31.877 --> 00:02:36.401
+on protocol 2025-11-25, with 17 tools from tools/list,
+
+35
+00:02:36.441 --> 00:02:40.205
+and live JSON-RPC traffic behind every click.
+
+36
+00:02:40.996 --> 00:02:46.706
+It all runs locally with no paid services, backed by 110 automated tests.
+
+37
+00:02:47.026 --> 00:02:50.136
+SentryFlow: the model can suggest anything.
+
+38
+00:02:50.456 --> 00:02:52.916
+Only policy decides what runs.
