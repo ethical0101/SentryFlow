@@ -57,32 +57,52 @@ hypothetical. Severity: Low / Medium / High.
 
 ### F5 — "Security and data policies" section not yet published (Medium)
 
-* **Task:** Align a sensitive-action add-on (unlock, purchase) with Amazon's security expectations.
+* **Task:** Align an add-on that can unlock doors and place orders with Amazon's security and data
+  expectations for Alexa+ MCP add-ons.
+* **Steps:** Read the Alexa+ MCP QuickStart end to end, looking for policy guidance on sensitive
+  actions (confirmations, purchases, locks, data handling).
+* **Expected:** Concrete requirements, for example which actions need explicit customer confirmation.
 * **Actual:** The QuickStart says the section "will be published in a future revision".
-* **Workaround:** Wrote our own threat model and made the agent unable to approve its own actions.
-* **Suggestion:** Even a short interim list (confirmation for purchases, handling of locks) would help.
+* **Workaround:** Wrote our own threat model, required owner approval bound to exact arguments for
+  purchases and unlocking, and made the agent unable to approve its own actions.
+* **Suggestion:** Publish even a short interim list (confirmation for purchases, handling of locks and
+  security devices) so builders can design to it from day one.
 
 ## Wider ecosystem (not Amazon tooling, recorded for completeness)
 
 ### E1 — MCP TypeScript SDK security advisory on the version we first chose (Medium)
 
+* **Task:** Pin a stable MCP TypeScript SDK version for the server and the browser client.
+* **Steps:** Installed `@modelcontextprotocol/sdk` 1.30.1, then ran `npm audit`.
+* **Expected:** A clean audit for a current release.
 * **Actual:** `npm audit` flagged GHSA-6qxp-vccf-f47h (OAuth client could send credentials to an
   authorization server chosen by the MCP server) for SDK ≤ 1.30.1.
 * **Workaround:** Pinned 1.31.0. SentryFlow does not use the SDK's OAuth client, but the browser
   bundle includes the client package.
+* **Suggestion:** Call out security fixes prominently in the SDK release notes so pinned projects
+  notice them.
 
-### E2 — Small local model misreads restrictions as commands (expected, handled)
+### E2 — Small local model misreads restrictions as commands (Medium, handled)
 
-* **Actual:** `qwen2.5:3b` turned *"Never … disable security …"* into a `set_security_mode
+* **Task:** Plan the demo request with a local 3B model.
+* **Steps:** Sent *"… Never unlock a door, disable security, or make purchases without explicit
+  approval"* to `qwen2.5:3b` through Ollama with a JSON schema.
+* **Expected:** No action for sentences that are restrictions; dependencies only where needed.
+* **Actual:** The model turned *"Never … disable security …"* into a `set_security_mode
   {"mode":"disarmed"}` action, and chained every action to the previous one. The policy denied
   the disarm; the chained dependencies caused a valid purchase to be skipped.
 * **Workaround:** Prompt changes (restrictions produce no action; dependencies only when needed) fixed
-  both in three of three re-runs. Policy remained the safety net regardless. A regression test
+  both in three of three re-runs. Policy remained the safety net regardless, and a regression test
   reproduces the original model output.
+* **Suggestion:** Never rely on the model to honour restrictions; enforce them in deterministic code.
 
-### E3 — Hot-reloading the server invalidates browser MCP sessions
+### E3 — Server restarts invalidate browser MCP sessions (Low, fixed)
 
-* **Actual:** After a dev-server restart, the browser's MCP calls returned `404 Session not found`,
-  and parallel calls each tried to reconnect, racing each other.
-* **Fix:** Single-flight re-initialization on 404, as the MCP spec prescribes. Verified in the
+* **Task:** Keep the browser MCP client working across server restarts during development.
+* **Steps:** Restarted the server while the web UI held open MCP sessions, then triggered tool calls.
+* **Expected:** The client recovers transparently.
+* **Actual:** Calls returned `404 Session not found`, and parallel calls each tried to reconnect,
+  racing each other.
+* **Workaround:** Single-flight re-initialization on 404, as the MCP spec prescribes. Verified in the
   traffic log: `404 → initialize → notifications/initialized → tools/list → retry 200`.
+* **Suggestion:** The SDK client could offer opt-in automatic re-initialization on session loss.
