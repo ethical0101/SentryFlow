@@ -1,0 +1,26 @@
+{
+  "name": "@sentryflow/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "start": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:json": "vitest run --reporter=json --outputFile=../reports/server-tests.json",
+    "typecheck": "tsc --noEmit",
+    "smoke": "tsx scripts/mcp-smoke.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "express": "5.2.1",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.0",
+    "@types/node": "20.17.10",
+    "tsx": "4.23.15",
+    "vitest": "4.1.11"
+  }
+}

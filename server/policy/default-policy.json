@@ -1,0 +1,143 @@
+{
+  "name": "sentryflow-household-default",
+  "version": "1.0.0",
+  "description": "Default household policy. Rules are evaluated in order; the first match wins; if nothing matches, the action is denied.",
+  "defaultDecision": "DENY",
+  "defaultRisk": "CRITICAL",
+  "rules": [
+    {
+      "id": "read.device_state",
+      "description": "Reading device state is always allowed.",
+      "tool": "get_device_state",
+      "decision": "ALLOW",
+      "risk": "LOW"
+    },
+    {
+      "id": "read.security_status",
+      "description": "Reading security status is always allowed.",
+      "tool": "get_security_status",
+      "decision": "ALLOW",
+      "risk": "LOW"
+    },
+    {
+      "id": "lighting.any",
+      "description": "Lights may be controlled freely.",
+      "tool": "set_light",
+      "decision": "ALLOW",
+      "risk": "LOW"
+    },
+    {
+      "id": "climate.too_cold",
+      "description": "Targets below 16 °C risk frozen pipes and are denied.",
+      "tool": "set_thermostat",
+      "when": { "all": [{ "fact": "args.targetC", "op": "lt", "value": 16 }] },
+      "decision": "DENY",
+      "risk": "MEDIUM"
+    },
+    {
+      "id": "climate.too_hot",
+      "description": "Targets above 28 °C are outside the configured comfort range and are denied.",
+      "tool": "set_thermostat",
+      "when": { "all": [{ "fact": "args.targetC", "op": "gt", "value": 28 }] },
+      "decision": "DENY",
+      "risk": "MEDIUM"
+    },
+    {
+      "id": "climate.off",
+      "description": "Turning heating/cooling fully off needs owner approval.",
+      "tool": "set_thermostat",
+      "when": { "all": [{ "fact": "args.mode", "op": "eq", "value": "off" }] },
+      "decision": "REQUIRE_APPROVAL",
+      "risk": "MEDIUM"
+    },
+    {
+      "id": "climate.in_range",
+      "description": "Any other thermostat change within limits is allowed.",
+      "tool": "set_thermostat",
+      "decision": "ALLOW",
+      "risk": "LOW"
+    },
+    {
+      "id": "locks.lock",
+      "description": "Locking a door makes the home safer and is allowed.",
+      "tool": "lock_door",
+      "decision": "ALLOW",
+      "risk": "LOW"
+    },
+    {
+      "id": "locks.unlock_while_away",
+      "description": "Doors cannot be unlocked by the agent while the system is armed away.",
+      "tool": "unlock_door",
+      "when": { "all": [{ "fact": "state.security.mode", "op": "eq", "value": "armed_away" }] },
+      "decision": "DENY",
+      "risk": "CRITICAL"
+    },
+    {
+      "id": "locks.unlock",
+      "description": "Unlocking a door always needs explicit owner approval.",
+      "tool": "unlock_door",
+      "decision": "REQUIRE_APPROVAL",
+      "risk": "HIGH"
+    },
+    {
+      "id": "security.disarm",
+      "description": "The agent may never disarm the security system; the owner must use the panel.",
+      "tool": "set_security_mode",
+      "when": { "all": [{ "fact": "args.mode", "op": "eq", "value": "disarmed" }] },
+      "decision": "DENY",
+      "risk": "CRITICAL"
+    },
+    {
+      "id": "security.arm",
+      "description": "Arming the security system is allowed.",
+      "tool": "set_security_mode",
+      "decision": "ALLOW",
+      "risk": "MEDIUM"
+    },
+    {
+      "id": "security.camera_off",
+      "description": "The agent may never stop a camera from recording.",
+      "tool": "set_camera_recording",
+      "when": { "all": [{ "fact": "args.recording", "op": "eq", "value": false }] },
+      "decision": "DENY",
+      "risk": "CRITICAL"
+    },
+    {
+      "id": "security.camera_on",
+      "description": "Starting camera recording is allowed.",
+      "tool": "set_camera_recording",
+      "decision": "ALLOW",
+      "risk": "LOW"
+    },
+    {
+      "id": "routines.preapproved",
+      "description": "Routines on the owner's pre-approved list may be enabled.",
+      "tool": "enable_routine",
+      "when": { "all": [{ "fact": "args.routineId", "op": "in", "value": ["leaving_home", "good_night"] }] },
+      "decision": "ALLOW",
+      "risk": "MEDIUM"
+    },
+    {
+      "id": "routines.other",
+      "description": "Any other routine needs owner approval.",
+      "tool": "enable_routine",
+      "decision": "REQUIRE_APPROVAL",
+      "risk": "MEDIUM"
+    },
+    {
+      "id": "purchase.over_limit",
+      "description": "Orders over $100 total are denied.",
+      "tool": "purchase_item",
+      "when": { "all": [{ "fact": "derived.totalUsd", "op": "gt", "value": 100 }] },
+      "decision": "DENY",
+      "risk": "HIGH"
+    },
+    {
+      "id": "purchase.approval",
+      "description": "All orders need explicit owner approval.",
+      "tool": "purchase_item",
+      "decision": "REQUIRE_APPROVAL",
+      "risk": "HIGH"
+    }
+  ]
+}
